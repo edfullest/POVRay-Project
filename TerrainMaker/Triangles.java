@@ -18,27 +18,27 @@ public class Triangles {
     private int max = 1;
     private void m() throws FileNotFoundException {
 
-        // a[0][0] = 20;
-        // a[0][last - 1] = 20;
-        // a[last - 1][0] = 5;
-        // a[last - 1][last - 1] = 2;
+        a[0][0] = 20;
+        a[0][last - 1] = 20;
+        a[last - 1][0] = 5;
+        a[last - 1][last - 1] = 2;
 
-        // Position top_left = new Position(0, 0);
-        // Position top_right = new Position(0, last - 1);
-        // Position bottom_left = new Position(last - 1, 0);
-        // Position bottom_right = new Position(last - 1, last - 1);
+        Position top_left = new Position(0, 0);
+        Position top_right = new Position(0, last - 1);
+        Position bottom_left = new Position(last - 1, 0);
+        Position bottom_right = new Position(last - 1, last - 1);
 
-        // interpolate(last + 1, top_left, top_right, bottom_left, bottom_right);
+        interpolate(last + 1, top_left, top_right, bottom_left, bottom_right);
 
-        // PrintStream stream = new PrintStream(new FileOutputStream("file.txt"));
+        PrintStream stream = new PrintStream(new FileOutputStream("file.txt"));
 
-        // System.out.println(last);
-        // for (int i = 0; i < last; i++) {
-        //     for (int j = 0; j < last; j++) {
-        //         stream.print(a[i][j] + " ");
-        //     }
-        //     stream.println();
-        // }
+        System.out.println(last);
+        for (int i = 0; i < last; i++) {
+            for (int j = 0; j < last; j++) {
+                stream.print(a[i][j] + " ");
+            }
+            stream.println();
+        }
 
         Scanner scanner = new Scanner(new File("matriz.txt"));
 
