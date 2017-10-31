@@ -8217,6 +8217,10 @@ global_settings { assumed_gamma 1.1 }
     }
 }
 
+#declare OCEAN = plane {<0,1,0>, 0 }
+
+#declare SKY = plane{<0,1,0>,1 hollow }
+
 camera {
     angle 65 
     location  <0.0 , 1.0 ,-120.0>
@@ -8227,14 +8231,16 @@ light_source{<1500,2500,-2500>
     color White
 }
 
-plane{<0,1,0>,1 hollow  
-       texture{ T_Sky }      
-       scale 10000
+object {
+    SKY
+    texture{ T_Sky }      
+    scale 10000
 }
 
-plane{<0,1,0>, 0 
-      texture{ T_Water }
-      translate <10, 0, 0>
+object {
+    OCEAN
+    texture{ T_Water }
+    translate <10, 0, 0>  
 }
 
 object{
