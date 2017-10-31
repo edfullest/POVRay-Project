@@ -6,7 +6,7 @@ import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-public class Triangles {
+public class MoonTerrain {
 
     private int n = 5;
     private int last = (int) Math.pow(2, n) + 1;
@@ -99,7 +99,7 @@ public class Triangles {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        new Triangles().m();
+        new MoonTerrain().m();
     }
 
 
