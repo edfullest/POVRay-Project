@@ -85,12 +85,12 @@ public class MoonTerrain {
             for (int j = 0; j < last - 1; j++){
                 stream.println("triangle {");
                 stream.printf("<%d, %f, %d><%d, %f, %d><%d, %f, %d>\n", i, a[i][j], j, i, a[i][j + 1], j + 1, i + 1, a[i + 1][j + 1], j + 1);
-                stream.println("texture { T_Water } ");
+                stream.println("texture { T_Moon } ");
                 stream.println("}");
 
                 stream.println("triangle {");
                 stream.printf("<%d, %f, %d><%d, %f, %d><%d, %f, %d>\n", i + 1, a[i + 1][j + 1], j + 1, i + 1, a[i + 1][j], j, i, a[i][j], j);
-                stream.println("texture { T_Water } ");
+                stream.println("texture { T_Moon } ");
                 stream.println("}");
             }
         }
