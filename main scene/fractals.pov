@@ -17,6 +17,86 @@ camera {
   }
 
 light_source { <50, 50, -50> color rgb<1, 1, 1> }
+ 
+
+//---Gargantua---
+
+#declare r=55; //minor radius
+#declare R=70; //major radius
+#declare color_tone = 0.4;
+
+#macro F_Gargantua(small_radius, big_radius, times, color_tone)
+    #if (times > 0) 
+        union {  
+            F_Gargantua(small_radius-1, big_radius-1, times-1, color_tone)
+            F_Gargantua(small_radius-2, big_radius-2, times-1, color_tone-0.1)
+            F_Gargantua(small_radius-3, big_radius-3, times-1, color_tone-0.1)
+            F_Gargantua(small_radius-4, big_radius-4, times-1, color_tone-0.2)
+        }
+        
+    #else  
+        union
+        {
+          disc {
+          0, y, big_radius, small_radius 
+          pigment{ 
+             mandel 50 exponent 2 //2...33
+             scale 0.60 translate<0.15,0,0>
+             color_map{[0.00 color rgb <1,1,color_tone>]
+                       } 
+             }
+          rotate <120, 0, 90>
+          translate <-1, -10, 0>
+          scale <1, 1.4, 1>  
+          }
+        
+        disc {
+          0, y, big_radius + 20, small_radius + 20  
+          pigment{ 
+             mandel 50 exponent 2 //2...33
+             scale 0.60 translate<0.15,0,0>
+             color_map{[0.00 color rgb <1,1,color_tone>]
+                       } 
+             }
+          scale <1.1, 1, 1>
+          rotate <0, -30, 180>   
+         } 
+        }
+     #end
+   #end 
+   
+  
+
+#declare S_center = sphere // transparent sphere containing media
+ { 0,1 pigment { rgbt 1 } hollow
+   interior
+   { media
+     { emission .1
+       density
+       { spherical density_map
+         { [0 rgb 0]
+           [1 rgb <0.1,0.1,0.1>]
+           [1 rgb 1]
+         }
+       }
+     }
+  }
+  translate <0, -.2, 0>
+  scale <50, 50, 50>
+ }
+ 
+object {
+    
+    union {
+        F_Gargantua(r, R, 4, color_tone)
+        S_center
+        scale 0.1
+        translate <20, 10, 20>
+        rotate <-10, 10, 0>
+    } 
+}
+
+//---End Gargantua---
 
 #declare T_Water = texture{
   pigment{ rgb <0.2, 0.2, 0.2> } 
