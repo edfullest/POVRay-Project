@@ -19,37 +19,24 @@ camera {
 light_source { <50, 50, -50> color rgb<1, 1, 1> }
  
 
-//---Gargantua---
+//---Rings---
 
 #declare r=55; //minor radius
 #declare R=70; //major radius
 #declare color_tone = 0.4;
 
-#macro F_Gargantua(small_radius, big_radius, times, color_tone)
+#macro F_Ring(small_radius, big_radius, times, color_tone)
     #if (times > 0) 
         union {  
-            F_Gargantua(small_radius-1, big_radius-1, times-1, color_tone)
-            F_Gargantua(small_radius-2, big_radius-2, times-1, color_tone-0.1)
-            F_Gargantua(small_radius-3, big_radius-3, times-1, color_tone-0.1)
-            F_Gargantua(small_radius-4, big_radius-4, times-1, color_tone-0.2)
+            F_Ring(small_radius-1, big_radius-1, times-1, color_tone)
+            F_Ring(small_radius-2, big_radius-2, times-1, color_tone-0.1)
+            F_Ring(small_radius-3, big_radius-3, times-1, color_tone-0.1)
+            F_Ring(small_radius-4, big_radius-4, times-1, color_tone-0.2)
         }
         
     #else  
         union
         {
-          disc {
-          0, y, big_radius, small_radius 
-          pigment{ 
-             mandel 50 exponent 2 //2...33
-             scale 0.60 translate<0.15,0,0>
-             color_map{[0.00 color rgb <1,1,color_tone>]
-                       } 
-             }
-          rotate <120, 0, 90>
-          translate <-1, -10, 0>
-          scale <1, 1.4, 1>  
-          }
-        
         disc {
           0, y, big_radius + 20, small_radius + 20  
           pigment{ 
@@ -64,47 +51,68 @@ light_source { <50, 50, -50> color rgb<1, 1, 1> }
         }
      #end
    #end 
-   
-  
 
-#declare S_center = sphere // transparent sphere containing media
- { 0,1 pigment { rgbt 1 } hollow
-   interior
-   { media
-     { emission .1
-       density
-       { spherical density_map
-         { [0 rgb 0]
-           [1 rgb <0.1,0.1,0.1>]
-           [1 rgb 1]
-         }
-       }
-     }
-  }
-  translate <0, -.2, 0>
-  scale <50, 50, 50>
- }
- 
 object {
-    
-    union {
-        F_Gargantua(r, R, 4, color_tone)
-        S_center
+    F_Ring(r, R, 4, color_tone)
         scale 0.1
-        translate <20, 10, 20>
+        translate <20, 13, -10>
         rotate <-10, 10, 0>
-    } 
 }
 
-//---End Gargantua---
+//---End Rings---
 
-#declare T_Water = texture{
-  pigment{ rgb <0.2, 0.2, 0.2> } 
-  normal { bumps 0.08 scale <1,0.25,0.1>*1 turbulence 0.4 }
-  finish { ambient 0.05 diffuse 0.55 
-           brilliance 6.0 phong 0.8 phong_size 120
-           reflection 0.6 }
+
+#declare EVENTS_HORIZON = sphere {0, 7 scale <1, 1, 0.05>
+   pigment {
+      wood pigment_map {
+          [0.0 spiral1 0.5
+              color_map {
+                  [0.2 rgbt <0, 0, 0, 1>] 
+                  [0.3 rgbt <232/255,192/255,153/255, 1>] 
+                  [1.0 rgbt <1, 1, 1, 0.9>]} 
+            turbulence 0.2 octaves 0.3 lambda 1 scale 0.2
+            ]
+            [1.0 rgbt <232/255,192/255 ,153/255, 1>]
+      } // End of spiral pigment map 
+      scale 3.2 turbulence 0.01 octaves 4 lambda 4
+    }
+  finish {ambient 3 diffuse 10}
 }
+
+#declare SINGULARITY = sphere {0, 2.5
+      pigment {
+          warp {
+            spherical
+            orientation x
+            dist_exp 100 
+          }
+      }    
+}
+
+#declare BLACKHOLE = union {
+    object { EVENTS_HORIZON }
+}
+
+#declare GARGANTUA = union{
+  object {
+    BLACKHOLE 
+    rotate <60, 0, -10>
+    scale <1.5, 1.5, 1.5>
+  }
+  object { SINGULARITY
+    translate <0.0,0.0,-0.2>
+  }
+  object {BLACKHOLE 
+      rotate <-30, 20, 60>
+      scale <1, 1.5, 1>
+  }
+}
+
+object { GARGANTUA 
+    translate <20, -10, 10>
+    scale <6,6,6>
+}
+
 
 #declare T_Moon = texture {
   pigment{average pigment_map{
@@ -132,7 +140,7 @@ object {
 #declare T_Earth = texture {
    pigment{
       image_map {
-         gif "earthmap1k.gif"
+         gif "earth_map.gif"
          map_type 1  // Sphere type     
       }
    }         
@@ -144,7 +152,7 @@ sphere { <0,0,0> 6.378
             }     
          scale<1.03,1,1.03>
          rotate <09,-120,-20>
-         translate <30, 5, -10>
+         translate <30, 5, -2>
 }
 
 #declare MOON_TERRAIN = mesh {
@@ -8350,3 +8358,27 @@ object {
     scale <0.5,0.5,1.2>
     rotate <-10,0,0>
 }
+
+#declare T_Julia =
+pigment{ julia <0.360, 0.150>, 30
+         scale 2.5 translate<-3.0,1.0,1.5>
+         color_map{
+                   [0.05 color rgb <201/255,144/255 ,57/255>]
+                   [0.5 color rgb <0.2,0.2,0.2>]
+                   [1.0 color rgb <165/255,145/255 ,134/255>]
+                   }
+} 
+
+#declare PLANET = sphere{ <0,0,0>, 4.5
+        pigment{ T_Julia
+               } 
+}
+
+
+
+object {
+  PLANET
+  translate <20, 10, -15>
+  rotate <0,3,5>
+  finish{ambient 0.1 diffuse .6 brilliance .3}
+} 
